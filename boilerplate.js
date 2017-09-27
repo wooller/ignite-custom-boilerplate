@@ -150,12 +150,6 @@ async function install (context) {
 
   spinner.stop()
 
-  // react native link -- must use spawn & stdio: ignore or it hangs!! :(
-  spinner.text = `▸ linking native libraries`
-  spinner.start()
-  await system.spawn('react-native link', { stdio: 'ignore' })
-  spinner.stop()
-
   // pass long the debug flag if we're running in that mode
   const debugFlag = parameters.options.debug ? '--debug' : ''
 
@@ -202,20 +196,11 @@ async function install (context) {
   // ANDROID
   const MainActivityPath = `android/app/src/main/java/com/${name.toLowerCase()}/MainActivity.java`
   const MainApplicationPath = `android/app/src/main/java/com/${name.toLowerCase()}/MainApplication.java`
+  const buildGradlePath = `android/app/build.gradle`
   //const MainActivityPath = `android/app/src/main/java/com/testproject/MainActivity.java`
 
   spinner.text = `▸ manually linking react-native-navigation on Android`
   spinner.start()
-  //MainActivity
-  // await ignite.patchInFile(MainActivityPath, {
-  //    replace: 'import com.facebook.react.ReactActivity;',
-  //    insert: 'import com.reactnativenavigation.controllers.SplashActivity;'
-  // })
-  // await ignite.patchInFile(MainActivityPath, {
-  //    replace: 'public class MainActivity extends ReactActivity',
-  //    insert: 'public class MainActivity extends SplashActivity'
-  // })
-  //MainApplication
 
   const WixNavigationTemplates = [
     { template: 'MainActivity.java.ejs', target: MainActivityPath },
@@ -230,23 +215,25 @@ async function install (context) {
     directory: `${ignite.ignitePluginPath()}/boilerplate`
   })
 
+  await ignite.patchInFile(buildGradlePath, {
+     replace: 'compileSdkVersion 23',
+     insert: 'compileSdkVersion 25'
+  })
 
+  await ignite.patchInFile(buildGradlePath, {
+     replace: 'buildToolsVersion "23.0.1"',
+     insert: 'buildToolsVersion "25.0.1"'
+  })
 
-  // await ignite.patchInFile(MainApplicationPath, {
-  //    replace: 'import com.facebook.react.ReactApplication;',
-  //    insert: 'import com.reactnativenavigation.NavigationApplication;'
-  // })
-  // await ignite.patchInFile(MainApplicationPath, {
-  //    replace: 'public class MainApplication extends Application implements ReactApplication',
-  //    insert: 'public class MainApplication extends NavigationApplication'
-  // })
-  // await ignite.patchInFile(MainApplicationPath, {
-  //    replace: 'public class MainApplication extends Application implements ReactApplication',
-  //    insert: 'public class MainApplication extends NavigationApplication'
-  // })
   spinner.stop()
   print.info(MainActivityPath)
   spinner.succeed(`manually linked navigation`)
+
+  // react native link -- must use spawn & stdio: ignore or it hangs!! :(
+  spinner.text = `▸ linking native libraries`
+  spinner.start()
+  await system.spawn('react-native link', { stdio: 'ignore' })
+  spinner.stop()
 
   // git configuration
   const gitExists = await filesystem.exists('./.git')
