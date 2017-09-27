@@ -2,8 +2,8 @@
   "name": "ignite-wcm-boilerplate",
   "description": "WeClick Medias boilerplate for React Native.",
   "license": "MIT",
-  "repository": "infinitered/ignite-ir-boilerplate",
-  "homepage": "https://github.com/infinitered/ignite-ir-boilerplate",
+  "repository": "weclickmedia/react-native-wcm-boilerplate",
+  "homepage": "https://bitbucket.org/weclickmedia/react-native-wcm-boilerplate/",
   "version": "1.0.0",
   "files": [
     "boilerplate",
