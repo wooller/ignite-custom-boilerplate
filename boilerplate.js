@@ -202,27 +202,42 @@ async function install (context) {
   spinner.text = `▸ manually linking react-native-navigation on Android`
   spinner.start()
 
-  const WixNavigationTemplates = [
+  const WixNavigationTemplatesAndroid = [
     { template: 'MainActivity.java.ejs', target: MainActivityPath },
     { template: 'MainApplication.java.ejs', target: MainApplicationPath }
   ]
-  const WixNavigationTemplateProps = {
+  const WixNavigationTemplatePropsAndroid = {
     name,
     packageName: `com.${name.toLowerCase()}`
   }
-  await ignite.copyBatch(context, WixNavigationTemplates, WixNavigationTemplateProps, {
+  await ignite.copyBatch(context, WixNavigationTemplatesAndroid, WixNavigationTemplatePropsAndroid, {
     quiet: true,
     directory: `${ignite.ignitePluginPath()}/boilerplate`
   })
-
   await ignite.patchInFile(buildGradlePath, {
      replace: 'compileSdkVersion 23',
      insert: 'compileSdkVersion 25'
   })
-
   await ignite.patchInFile(buildGradlePath, {
      replace: 'buildToolsVersion "23.0.1"',
      insert: 'buildToolsVersion "25.0.1"'
+  })
+
+  // -------------
+  // ios
+  //
+  const appDelegatePath = `ios/${name}/AppDelegate.m`
+
+  const WixNavigationTemplatesIOS = [
+    { template: 'AppDelegate.m.ejs', target: appDelegatePath }
+  ]
+  const WixNavigationTemplatePropsIOS = {
+    name,
+    packageName: `com.${name.toLowerCase()}`
+  }
+  await ignite.copyBatch(context, WixNavigationTemplatesIOS, WixNavigationTemplatePropsIOS, {
+    quiet: false,
+    directory: `${ignite.ignitePluginPath()}/boilerplate`
   })
 
   spinner.stop()
