@@ -5,11 +5,11 @@ This repository holds a boilerplate to be used with the Ignite CLI by Infinite R
 ## Installation
 1) First make sure you are [set up for React Native](https://facebook.github.io/react-native/docs/getting-started.html#content)
 
-1) Ensure you have Node 7.6+
+2) Ensure you have Node 7.6+
 
-1) Install Yarn for your [system](https://yarnpkg.com/lang/en/docs/install/)
+3) Install Yarn for your [system](https://yarnpkg.com/lang/en/docs/install/)
 
-1) Install the Ignite CLI `npm install -g ignite-cli`
+4) Install the Ignite CLI `npm install -g ignite-cli`
 
 ## Usage
 1) Clone this repository locally
