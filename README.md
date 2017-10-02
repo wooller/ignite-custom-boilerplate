@@ -1,29 +1,35 @@
-# README #
+# React Native Boilerplate
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This repository holds a boilerplate to be used with the Ignite CLI by Infinite Red. The purpose of this boilerplate is to give WeClick Media React Native developers a quick and easy set up with some core libaries/integrations.
 
-### What is this repository for? ###
+## Installation
+1) First make sure you are [set up for React Native](https://facebook.github.io/react-native/docs/getting-started.html#content)
+1) Ensure you have Node 7.6+
+1) Install Yarn for your [system](https://yarnpkg.com/lang/en/docs/install/)
+1) Install the Ignite CLI `npm install -g ignite-cli`
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## Usage
+1) Clone this repository locally
+2) Then create your new react native application by executing the following (substitute the path for the path of where you cloned this repo)
+```ignite new exampleApp --boilerplate=/Users/admin/Templates/react-native-wcm-boilerplate```
 
-### How do I get set up? ###
+## Currently Supported
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+  - Integration with [Crashlyrics](https://try.crashlytics.com/) (Android Only)
+  - Semantic versioning via NPM [read more about semantic versioning](http://semver.org/)
+  - Core Packages
+    - [react-native-navigation](https://github.com/wix/react-native-navigation)
+    - [react-native-config](https://github.com/luggit/react-native-config)
+    - [react-redux](https://github.com/reactjs/react-redux)
+    - [redux-thunk](https://github.com/gaearon/redux-thunk)
+    - [apisauce](https://github.com/infinitered/apisauce)
+    - [lodash](https://github.com/lodash/lodash)
+  - Optional Packages
+    - [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons)
+    - [react-native-i18n](https://github.com/AlexanderZaytsev/react-native-i18n)
+    - [react-native-animatable](https://github.com/oblador/react-native-animatable)
 
-### Contribution guidelines ###
+### Todos
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+ - crashlytics iOS
+ - fastlane
