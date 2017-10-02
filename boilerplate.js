@@ -70,12 +70,18 @@ async function install (context) {
 
   // --max, --min, interactive
   let answers
+  let crashlyticsKeyAnswers
   if (parameters.options.max) {
     answers = options.answers.max
   } else if (parameters.options.min) {
     answers = options.answers.min
   } else {
     answers = await prompt.ask(options.questions)
+  }
+
+  if (answers['crashlytics'] === 'yes') {
+    const crashlyticsKey = { type: 'input', name: 'crashlyticsKey', message: 'Enter your crashlytics API Key' }
+    crashlyticsKeyAnswers = await prompt.ask(crashlyticsKey)
   }
 
   // generate some templates
@@ -198,6 +204,7 @@ async function install (context) {
   const MainApplicationPath = `android/app/src/main/java/com/${name.toLowerCase()}/MainApplication.java`
   const buildGradlePath = `android/app/build.gradle`
   const rootBuildGradlePath = `android/build.gradle`
+  const androidManifestPath = `android/app/src/main/AndroidManifest.xml`
   //const MainActivityPath = `android/app/src/main/java/com/testproject/MainActivity.java`
 
   spinner.text = `▸ manually linking react-native-navigation on Android`
@@ -295,6 +302,63 @@ async function install (context) {
   spinner.start()
   await system.spawn('react-native link', { stdio: 'ignore' })
   spinner.stop()
+
+  if (answers['crashlytics'] === 'yes') {
+    spinner.text = `▸ Adding Crashlytics`
+    spinner.start()
+
+    const compileCrashlyticsData = filesystem.read(`${ignite.ignitePluginPath()}/boilerplate/compileCrashlytics.ejs`)
+    await ignite.patchInFile(buildGradlePath, {
+       after: 'dependencies {',
+       insert: compileCrashlyticsData
+    })
+
+    const buildScriptCrashlyticsData= filesystem.read(`${ignite.ignitePluginPath()}/boilerplate/buildScriptCrashlytics.ejs`)
+    await ignite.patchInFile(buildGradlePath, {
+       before: 'apply plugin: "com.android.application"',
+       insert: buildScriptCrashlyticsData
+    })
+
+    const applyPluginCrashlyticsData= filesystem.read(`${ignite.ignitePluginPath()}/boilerplate/applyPluginCrashlytics.ejs`)
+    await ignite.patchInFile(buildGradlePath, {
+       after: 'apply plugin: "com.android.application"',
+       insert: applyPluginCrashlyticsData
+    })
+
+    const apiKeyManifestData= filesystem.read(`${ignite.ignitePluginPath()}/boilerplate/crashlyticsAPIKey.ejs`)
+    await ignite.patchInFile(androidManifestPath, {
+       before: '</application>',
+       insert: apiKeyManifestData
+    })
+
+    if (crashlyticsKeyAnswers['crashlyticsKey'] != null){
+      await ignite.patchInFile(androidManifestPath, {
+         replace: 'INSERT_API_KEY',
+         insert: crashlyticsKeyAnswers['crashlyticsKey']
+      })
+    }
+
+    await ignite.patchInFile(MainApplicationPath, {
+       after: 'import java.util.List;',
+       insert: 'import com.crashlytics.android.Crashlytics; \nimport io.fabric.sdk.android.Fabric;'
+    })
+
+    const onCreateCrashlyticsData= filesystem.read(`${ignite.ignitePluginPath()}/boilerplate/onCreateCrashlytics.ejs`)
+    await ignite.patchInFile(MainApplicationPath, {
+       after: 'public class MainApplication extends NavigationApplication {',
+       insert: onCreateCrashlyticsData
+    })
+
+    //iOS
+    // const directoryOutput = system.run(`ls -l`, { trim: true })
+    // ignite.log(directoryOutput)
+    //
+
+    //system.run(`cd ios . pod init`)
+
+    spinner.stop()
+    spinner.succeed(`Added Crashlytics for Android`)
+  }
 
   // git configuration
   const gitExists = await filesystem.exists('./.git')

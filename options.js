@@ -19,6 +19,18 @@ const questions = [
     message: 'What animation library will you use?',
     type: 'list',
     choices: ['none', 'react-native-animatable']
+  },
+  {
+    name: 'crashlytics',
+    message: 'Do you want to integrate crashlytics?',
+    type: 'list',
+      choices: ['yes', 'no']
+  },
+  {
+    name: 'fastlane',
+    message: 'Do you want to integrate fastlane?',
+    type: 'list',
+      choices: ['yes', 'no']
   }
 ]
 
@@ -28,7 +40,10 @@ const questions = [
 const max = {
   'vector-icons': 'react-native-vector-icons',
   i18n: 'react-native-i18n',
-  animatable: 'react-native-animatable'
+  animatable: 'react-native-animatable',
+  crashlytics: 'yes',
+  fastlane: 'yes'
+
 }
 
 /**
@@ -37,7 +52,9 @@ const max = {
 const min = {
   'vector-icons': 'none',
   i18n: 'none',
-  animatable: 'none'
+  animatable: 'none',
+  crashlytics: 'no',
+  fastlane: 'no'
 }
 
 module.exports = {
