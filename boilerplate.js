@@ -197,6 +197,7 @@ async function install (context) {
   const MainActivityPath = `android/app/src/main/java/com/${name.toLowerCase()}/MainActivity.java`
   const MainApplicationPath = `android/app/src/main/java/com/${name.toLowerCase()}/MainApplication.java`
   const buildGradlePath = `android/app/build.gradle`
+  const rootBuildGradlePath = `android/build.gradle`
   //const MainActivityPath = `android/app/src/main/java/com/testproject/MainActivity.java`
 
   spinner.text = `▸ manually linking react-native-navigation on Android`
@@ -223,8 +224,15 @@ async function install (context) {
      insert: 'buildToolsVersion "25.0.1"'
   })
 
+  spinner.stop()
+  spinner.succeed(`manually linked navigation on Android`)
+
+  spinner.text = `▸ manually linking react-native-navigation on iOS`
+  spinner.start()
   // -------------
   // ios
+  //
+  //
   //
   const appDelegatePath = `ios/${name}/AppDelegate.m`
 
@@ -236,13 +244,51 @@ async function install (context) {
     packageName: `com.${name.toLowerCase()}`
   }
   await ignite.copyBatch(context, WixNavigationTemplatesIOS, WixNavigationTemplatePropsIOS, {
-    quiet: false,
+    quiet: true,
     directory: `${ignite.ignitePluginPath()}/boilerplate`
+  })
+  spinner.stop()
+  spinner.succeed(`manually linked navigation on iOS`)
+
+  spinner.text = `▸ Adding Semantic Versioning`
+  spinner.start()
+
+  //ANDROID
+  await ignite.patchInFile(rootBuildGradlePath, {
+     after: '// Top-level build file where you can add configuration options common to all sub-projects/modules.',
+     insert: '\nimport groovy.json.JsonSlurper\n'
+  })
+
+  const rootBuildGradleVersioningData = filesystem.read(`${ignite.ignitePluginPath()}/boilerplate/rootBuildGradleVersioning.ejs`)
+
+  filesystem.append(rootBuildGradlePath, rootBuildGradleVersioningData);
+
+  await ignite.patchInFile(buildGradlePath, {
+     replace: 'versionCode 1',
+     insert: 'versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch'
+  })
+
+  await ignite.patchInFile(buildGradlePath, {
+     replace: 'versionName "1.0"',
+     insert: 'versionName "${versionMajor}.${versionMinor}.${versionPatch}"'
+  })
+
+  //iOS
+
+  const versioningTemplates = [
+    { template: 'version-ios.sh.ejs', target: '/npm-version/version-ios.sh' }
+  ]
+  const versioningTemplateProps = {
+    name,
+    packageName: `com.${name.toLowerCase()}`
+  }
+  await ignite.copyBatch(context, versioningTemplates, versioningTemplateProps, {
+    quiet: true,
+    directory: `${ignite.ignitePluginPath()}/boilerplate/`
   })
 
   spinner.stop()
-  print.info(MainActivityPath)
-  spinner.succeed(`manually linked navigation`)
+  spinner.succeed(`Added Semantic Versioning`)
 
   // react native link -- must use spawn & stdio: ignore or it hangs!! :(
   spinner.text = `▸ linking native libraries`

@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "scripts": {
+    "version": "./npm-version/version-ios.sh",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "clean": "rm -rf $TMPDIR/react-* && watchman watch-del-all && npm cache clean --force",
     "clean:android": "cd android/ && ./gradlew clean && cd .. && react-native run-android",
