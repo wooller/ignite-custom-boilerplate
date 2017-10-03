@@ -38,3 +38,7 @@ This repository holds a boilerplate to be used with the Ignite CLI by Infinite R
 
  - crashlytics iOS
  - fastlane
+ 
+ ## Recommendations
+ Submit any recommendations below for what should be bundles in to the boilerplate, state the libary/integration, your name and whether it should be optional or mandetory.
+ e.g. - Fastlane / Andy Wooller / Mandetory
