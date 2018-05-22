@@ -1,6 +1,6 @@
 # React Native Boilerplate
 
-This repository holds a boilerplate to be used with the Ignite CLI by Infinite Red. The purpose of this boilerplate is to give WeClick Media React Native developers a quick and easy set up with some core libaries/integrations.
+This repository holds a boilerplate to be used with the Ignite CLI by Infinite Red. The purpose of this boilerplate is to give React Native developers a quick and easy set up with some core libaries/integrations.
 
 ## Installation
 1) First make sure you are [set up for React Native](https://facebook.github.io/react-native/docs/getting-started.html#content)
@@ -16,7 +16,7 @@ This repository holds a boilerplate to be used with the Ignite CLI by Infinite R
 
 2) Then create your new react native application by executing the following (substitute the path for the path of where you cloned this repo)
 
-```ignite new exampleApp --boilerplate=/Users/admin/Templates/react-native-wcm-boilerplate```
+```ignite new exampleApp --boilerplate=/Users/admin/Templates/ignite-custom-boilerplate```
 
 ## Currently Supported
 
@@ -38,7 +38,3 @@ This repository holds a boilerplate to be used with the Ignite CLI by Infinite R
 
  - crashlytics iOS
  - fastlane
- 
- ## Recommendations
- Submit any recommendations below for what should be bundles in to the boilerplate, state the libary/integration, your name and whether it should be optional or mandetory.
- e.g. - Fastlane / Andy Wooller / Mandetory
